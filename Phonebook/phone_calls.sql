@@ -11,6 +11,7 @@ INSERT INTO operators (num, operator_name) VALUES
 
 
 CREATE TABLE calls (
+    id SERIAL PRIMARY KEY,
     phone_number VARCHAR(20),
     start_time TIMESTAMP,
     end_time TIMESTAMP
@@ -41,3 +42,60 @@ INSERT INTO subscribers (phone_number, last_name, first_name, middle_name, opera
 
 
 SELECT * From subscribers;
+
+
+
+
+
+
+CREATE TABLE operators (
+    id SERIAL PRIMARY KEY,
+    operator_name VARCHAR(50)
+);
+
+INSERT INTO operators (operator_name) VALUES
+('МТС'),
+('Билайн'),
+('Мегафон'),
+('Теле2'),
+('Yota');
+
+CREATE TABLE abonents(
+    id SERIAL PRIMARY KEY,
+    phone_number VARCHAR(20),
+    last_name VARCHAR(50),
+    first_name VARCHAR(50),
+    middle_name VARCHAR(50)
+);
+
+
+CREATE TABLE calls (
+    id SERIAL PRIMARY KEY,
+    phone int references abonents(id),
+    start_time TIMESTAMP,
+    end_time TIMESTAMP
+);
+
+INSERT INTO calls (phone, start_time, end_time) VALUES
+((select id from abonents where phone_number='+79991234567'), '2025-11-10 09:15', '2025-11-10 09:23'),
+((select id from abonents where phone_number='+79167778899'), '2025-09-03 14:00', '2025-09-03 14:12'),
+((select id from abonents where phone_number='+79263334455'), '2025-10-20 18:40', '2025-10-20 18:58'),
+((select id from abonents where phone_number='+79001230045'), '2025-08-12 07:55', '2025-08-12 08:05'),
+((select id from abonents where phone_number='+79851230987'), '2025-07-30 12:10', '2025-07-30 12:24');
+
+
+
+
+INSERT INTO abonents (phone_number, last_name, first_name, middle_name) VALUES
+('+79991234567', 'Петров', 'Илья', 'Андреевич'),
+('+79167778899', 'Сидорова', 'Марина', 'Владимировна'),
+('+79263334455', 'Ким', 'Виктор', 'Олегович'),
+('+79001230045', 'Орлова', 'Екатерина', 'Сергеевна'),
+('+79851230987', 'Гаврилов', 'Матвей', 'Игоревич');
+
+
+select * from calls; 
+
+select phone_number, last_name, first_name, start_time, end_time - start_time as call_duration
+from abonents, calls
+where calls.phone = abonents.id;
