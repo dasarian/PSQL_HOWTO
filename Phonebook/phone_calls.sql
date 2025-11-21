@@ -1,4 +1,3 @@
-How table will show only operators name?
 CREATE TABLE operators (
     num INTEGER,
     operator_name VARCHAR(50)
