@@ -45,7 +45,7 @@ SELECT * From subscribers;
 
 
 
-
+--------------------------------------------------------
 
 
 CREATE TABLE operators (
@@ -97,5 +97,9 @@ INSERT INTO abonents (phone_number, last_name, first_name, middle_name) VALUES
 select * from calls; 
 
 select phone_number, last_name, first_name, start_time, end_time - start_time as call_duration
+from abonents, calls
+where calls.phone = abonents.id;
+
+create view all_calls as select phone_number, last_name, first_name, start_time, end_time - start_time as call_duration
 from abonents, calls
 where calls.phone = abonents.id;
