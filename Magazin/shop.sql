@@ -71,26 +71,30 @@ INSERT INTO Units (Unit_name)VALUES
 
 CREATE TABLE Products(
     id SERIAL PRIMARY KEY,
-    Product_name varchar (50),
+    Product_name int references product(id),
     unit INTEGER,
     Quantity INTEGER,
     per_piece INTEGER,
-    Category INTEGER
+    Category int references product(id)
 );
 
 
 INSERT INTO Products (Product_name, unit, Quantity, per_piece, Category)VALUES
-('молоко', (select id from units where unit_name='liter'), 10, 100, (select id from product where category_name='молочное')),
-('говядина',(select id from units where unit_name='kilogram'), 15, 800, (select id from product where category_name='мясное')),
-('сахар',(select id from units where unit_name='kilogram'), 20, 50, (select id from product where category_name='бакалея')),
-('перец черный',(select id from units where unit_name='unit'), 50, 200, (select id from product where category_name='специи')),
-('картофель',(select id from units where unit_name='kilogram'), 100, 30, (select id from product where category_name='овощи'));
-
-
-select * from products;
+((select id from product where category_name='молочное'), (select id from units where unit_name='liter'), 10, 100, (select id from product where category_name='мясное')),
+((select id from product where category_name='мясное'), (select id from units where unit_name='kilogram'), 15, 800, (select id from product where category_name='бакалея')), 
+((select id from product where category_name='овощи'), (select id from units where unit_name='kilogram'), 20, 50, (select id from product where category_name='овощи')), 
+((select id from product where category_name='специи'), (select id from units where unit_name='unit'), 5, 200, (select id from product where category_name='специи')), 
+((select id from product where category_name='бакалея'), (select id from units where unit_name='kilogram'), 8, 150, (select id from product where category_name='бакалея')); 
 
 
 select category_name, product_name, quantity, unit_name, per_piece, per_piece*quantity as sum
 from products, units, product
 where units.id = unit and product.id=category;
 
+select * from products, units, product
+where products.unit=units.id and products.category=product.id; 
+
+create view full_products as
+select category_name, product_name, quantity, unit_name, per_piece, per_piece*quantity as sum
+from products, units, product
+where units.id = unit and product.id=category;  
